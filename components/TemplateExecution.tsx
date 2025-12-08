@@ -1,6 +1,5 @@
-
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import type { Template, Stack } from '../types';
+import type { Template, Stack, User } from '../types';
 import { UploadZone } from './UploadZone';
 import { Spinner } from './Spinner';
 import { ArrowLeftIcon, DownloadIcon, RefreshIcon, SparklesIcon } from './Icons';
@@ -10,9 +9,17 @@ interface TemplateExecutionProps {
   template: Template;
   stack: Stack;
   onBack: () => void;
+  onLoginRequired?: () => void;
+  user?: User | null;
 }
 
-export const TemplateExecution: React.FC<TemplateExecutionProps> = ({ template, stack, onBack }) => {
+export const TemplateExecution: React.FC<TemplateExecutionProps> = ({
+  template,
+  stack,
+  onBack,
+  onLoginRequired,
+  user
+}) => {
   const [selfieImage, setSelfieImage] = useState<File | null>(null);
   const [wearableImage, setWearableImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +49,12 @@ export const TemplateExecution: React.FC<TemplateExecutionProps> = ({ template, 
   // Paste handler
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
+        // Check if user is authenticated
+        if (!user) {
+          onLoginRequired?.();
+          return;
+        }
+
         // Read latest state from refs
         if (isLoadingRef.current || generatedImagesRef.current) return;
 
@@ -111,10 +124,16 @@ export const TemplateExecution: React.FC<TemplateExecutionProps> = ({ template, 
     return () => {
         window.removeEventListener('paste', handlePaste);
     };
-  }, []); // Empty dependency array ensures listener is stable
+  }, [user, onLoginRequired]); // Add user and onLoginRequired to dependency array
 
 
   const handleRemix = useCallback(async () => {
+    // Check if user is authenticated
+    if (!user) {
+      onLoginRequired?.();
+      return;
+    }
+
     const hasAllImages = isFititStack ? selfieImage && wearableImage : selfieImage;
     if (!hasAllImages) {
       setError("Please upload all required images.");
@@ -137,7 +156,7 @@ export const TemplateExecution: React.FC<TemplateExecutionProps> = ({ template, 
     } finally {
       setIsLoading(false);
     }
-  }, [selfieImage, wearableImage, template, isFititStack]);
+  }, [selfieImage, wearableImage, template, isFititStack, user, onLoginRequired]);
 
   const handleRemixAgain = () => {
     setSelfieImage(null);
@@ -175,7 +194,13 @@ export const TemplateExecution: React.FC<TemplateExecutionProps> = ({ template, 
                 <div className={`flex flex-col md:flex-row justify-center items-start gap-8 mb-10`}>
                     <div className="w-full max-w-md mx-auto">
                         <UploadZone 
-                            onFileChange={setSelfieImage} 
+                            onFileChange={(file) => {
+                              if (!user) {
+                                onLoginRequired?.();
+                                return;
+                              }
+                              setSelfieImage(file);
+                            }}
                             title={isFititStack ? "1. Upload Your Selfie" : "Upload Your Image"} 
                             subtitle="Required"
                             file={selfieImage}
@@ -186,7 +211,13 @@ export const TemplateExecution: React.FC<TemplateExecutionProps> = ({ template, 
                     {isFititStack && (
                         <div className="w-full max-w-md mx-auto">
                             <UploadZone 
-                                onFileChange={setWearableImage} 
+                                onFileChange={(file) => {
+                                  if (!user) {
+                                    onLoginRequired?.();
+                                    return;
+                                  }
+                                  setWearableImage(file);
+                                }}
                                 title="2. Upload Wearable" 
                                 subtitle="Required" 
                                 file={wearableImage}
