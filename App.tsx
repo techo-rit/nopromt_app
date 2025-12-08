@@ -74,6 +74,13 @@ const App: React.FC = () => {
     setSelectedTemplate(null);
   }, []);
 
+  // Check if user is authenticated before allowing remix/upload
+  const handleLoginRequired = useCallback(() => {
+    if (!user) {
+      setShowAuthModal(true);
+    }
+  }, [user]);
+
   // Authentication handlers
   const handleSignUp = async (email: string, password: string, name: string) => {
     setAuthLoading(true);
@@ -126,7 +133,13 @@ const App: React.FC = () => {
     switch (currentPage) {
       case 'template':
         return selectedTemplate && selectedStack && (
-          <TemplateExecution template={selectedTemplate} stack={selectedStack} onBack={handleBack} />
+          <TemplateExecution
+            template={selectedTemplate}
+            stack={selectedStack}
+            onBack={handleBack}
+            onLoginRequired={handleLoginRequired}
+            user={user}
+          />
         );
       case 'stack':
         return selectedStack && (
