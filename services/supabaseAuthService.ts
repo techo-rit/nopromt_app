@@ -61,7 +61,7 @@ export const supabaseAuthService = {
         id: authData.user.id,
         email: email,
         name: fullName,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date(),
       }
 
       return user
@@ -102,8 +102,8 @@ export const supabaseAuthService = {
       const user: User = {
         id: data.user.id,
         email: data.user.email || email,
-        name: profile?.full_name || email.split('@'),
-        createdAt: data.user.created_at || new Date().toISOString(),
+        name: profile?.full_name || email.split('@')[0],
+        createdAt: data.user.created_at ? new Date(data.user.created_at) : new Date(),
       }
 
       return user
@@ -157,8 +157,8 @@ export const supabaseAuthService = {
       const user: User = {
         id: data.user.id,
         email: data.user.email || '',
-        name: profile?.full_name || data.user.email?.split('@') || 'User',
-        createdAt: data.user.created_at || new Date().toISOString(),
+        name: profile?.full_name || data.user.email?.split('@')[0] || 'User',
+        createdAt: data.user.created_at ? new Date(data.user.created_at) : new Date(),
       }
 
       return user
@@ -200,8 +200,8 @@ export const supabaseAuthService = {
           const user: User = {
             id: session.user.id,
             email: session.user.email || '',
-            name: profile?.full_name || session.user.email?.split('@') || 'User',
-            createdAt: session.user.created_at || new Date().toISOString(),
+            name: profile?.full_name || session.user.email?.split('@')[0] || 'User', // Fixed split to get the username
+            createdAt: session.user.created_at ? new Date(session.user.created_at) : new Date(), // Convert to Date
           }
           callback(user)
         } else {
