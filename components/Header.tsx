@@ -64,10 +64,11 @@ export const Header: React.FC<HeaderProps> = ({
                                 className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-100 transition-all focus:outline-none"
                             >
                                 <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white font-medium text-sm">
-                                    {user.name.charAt(0).toUpperCase()}
+                                    {user?.name?.charAt(0)?.toUpperCase() || 'A'}
                                 </div>
-                                <span className="text-sm font-medium text-gray-700">{user.name.split(' ')[0]}</span>
+                                <span className="text-sm font-medium text-gray-700">{user?.name?.split(' ')[0] || 'User'}</span>
                             </button>
+
 
                             {/* User Dropdown Menu */}
                             {showUserMenu && (
