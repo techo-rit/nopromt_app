@@ -227,7 +227,7 @@ const aestheticsTemplates: Template[] = [
     name: 'Modern Casual City',
     stackId: 'aesthetics',
     imageUrl: '/images/asthetics_moderncasualcity_cover.webp',
-    prompt: 'Make sure the background of the output image is not blurry and the output image has clearly visible background objects. Ensure the output figure\'s face matches sharply with the input figure\'s face, preserving the exact chin shape and jawline without rounding. {input person} in modern casual wear — jeans, light top, sneakers — city backdrop with graffiti walls or cozy café vibe, relaxed pose, cinematic lifestyle look.\nno washed-out colors, no messy framing, no extra people, no cartoon tone. no background blur, change the hand gestures according to the background, no change in hairstyle.',
+    prompt: 'Make sure the background of the output image is not blurry and the output image has clearly visible background objects. Ensure the output figure face matches sharply with the input figure\'s face, preserving the exact chin shape and jawline without rounding. {input person} in modern casual wear — jeans, light top, sneakers — city backdrop with graffiti walls or cozy café vibe, relaxed pose, cinematic lifestyle look.\nno washed-out colors, no messy framing, no extra people, no cartoon tone. no background blur, change the hand gestures according to the background, no change in hairstyle.',
     aspectRatio: '3:4',
   },
   {
